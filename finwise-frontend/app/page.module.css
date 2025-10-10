@@ -1,0 +1,239 @@
+/* Simplified styles for MVP */
+.container {
+  padding: 24px;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(17,17,17,0.9);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #2a2a2a;
+  border-radius: 8px;
+}
+.brand {
+  display: flex;
+  flex-direction: column;
+}
+.brandTitle {
+  font-size: 18px;
+  font-weight: 700;
+}
+.brandSub {
+  font-size: 12px;
+  color: #9aa0a6;
+}
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.toggleBtn {
+  padding: 6px 10px;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  background: #151515;
+}
+.mood {
+  font-size: 18px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.section {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.splitMain {
+  display: flex;
+  gap: 16px;
+}
+.leftPane { flex: 1; min-width: 0; }
+.rightPane { flex: 1; min-width: 0; }
+
+.label {
+  font-weight: 600;
+}
+
+.textarea {
+  width: 100%;
+  height: 120px;
+  padding: 8px;
+}
+
+.button {
+  margin-top: 8px;
+  padding: 8px 12px;
+}
+
+.error {
+  color: red;
+  margin-top: 12px;
+}
+
+.subtitle {
+  margin-top: 24px;
+}
+
+.pre {
+  max-height: 200px;
+  overflow: auto;
+  background: #111;
+  color: #ddd;
+  padding: 12px;
+  white-space: pre-wrap;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.split {
+  display: flex;
+  gap: 12px;
+}
+
+.flexItem {
+  flex: 1;
+  min-width: 0;
+}
+
+.muted {
+  color: #666;
+}
+
+.preWrap {
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.hint {
+  margin-bottom: 8px;
+  opacity: 0.8;
+}
+
+.tableWrap {
+  overflow: auto;
+  border: 1px solid #222;
+  border-radius: 8px;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th, .table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #1e1e1e;
+}
+.table th {
+  text-align: left;
+  background: #0f0f0f;
+}
+.right {
+  text-align: right;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+.card {
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 12px;
+  background: #0b0b0b;
+}
+.cardLabel {
+  font-size: 12px;
+  color: #aaa;
+}
+.cardValue {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.typing {
+  font-size: 12px;
+  color: #9aa0a6;
+}
+
+.dropZone {
+  border: 1px dashed #2a2a2a;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  color: #9aa0a6;
+}
+
+.footerBar {
+  position: sticky;
+  bottom: 0;
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(17,17,17,0.9);
+  border-top: 1px solid #2a2a2a;
+  border-radius: 8px;
+}
+.footerBtn { padding: 8px 12px; border: 1px solid #2a2a2a; border-radius: 6px; background: #151515; }
+
+.pageRootLight {
+  background: #f9fafb;
+  color: #111;
+}
+
+/* Chat styles */
+.chat {
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 8px;
+  height: 360px;
+  overflow: auto;
+  background: #0b0b0b;
+}
+.bubbleRow {
+  display: flex;
+  width: 100%;
+  margin: 6px 0;
+}
+.bubbleUser {
+  margin-left: auto;
+  background: #1f6feb;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 12px 12px 2px 12px;
+  max-width: 76%;
+}
+.bubbleAssistant {
+  margin-right: auto;
+  background: #1a1a1a;
+  color: #eaeaea;
+  padding: 8px 12px;
+  border-radius: 12px 12px 12px 2px;
+  max-width: 76%;
+  border: 1px solid #222;
+}
+.chatInputRow {
+  display: flex;
+  gap: 8px;
+}
+.chatInput {
+  flex: 1;
+  min-height: 44px;
+  padding: 8px;
+}

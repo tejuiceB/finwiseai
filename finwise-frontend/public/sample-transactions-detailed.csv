@@ -1,0 +1,61 @@
+date,description,amount,category,type
+2025-06-01,Salary June,85000,Income,income
+2025-06-02,Rent - Apartment,-18000,Rent,expense
+2025-06-03,Groceries - Big Bazaar,-3200,Groceries,expense
+2025-06-04,Swiggy - Dinner,-650,Dining,expense
+2025-06-05,Uber to Office,-240,Transport,expense
+2025-06-06,Electricity Bill,-2100,Utilities,expense
+2025-06-07,Internet Bill,-999,Utilities,expense
+2025-06-08,Amazon - Headphones,-1999,Shopping,expense
+2025-06-09,Cafe - Coffee with friend,-220,Dining,expense
+2025-06-10,Health Insurance,-1500,Insurance,expense
+2025-06-12,Freelance Payment,12000,Income,income
+2025-06-14,Movie Night,-450,Entertainment,expense
+2025-06-15,Pharmacy - Medicines,-780,Health,expense
+2025-06-18,Petrol,-1700,Transport,expense
+2025-06-20,Mobile Recharge,-399,Utilities,expense
+2025-06-22,Gift - Birthday,-1000,Gifts,expense
+2025-06-25,EMI - Laptop,-2500,EMI,expense
+2025-06-27,Restaurant - Family Dinner,-1800,Dining,expense
+2025-06-28,Local Train Pass,-600,Transport,expense
+2025-06-30,Savings Transfer,-5000,Savings,expense
+2025-07-01,Salary July,85000,Income,income
+2025-07-02,Rent - Apartment,-18000,Rent,expense
+2025-07-03,Groceries - Reliance Fresh,-3400,Groceries,expense
+2025-07-04,Swiggy - Lunch,-420,Dining,expense
+2025-07-05,Ola to Airport,-980,Transport,expense
+2025-07-06,Electricity Bill,-2300,Utilities,expense
+2025-07-07,Internet Bill,-999,Utilities,expense
+2025-07-08,Amazon - Shoes,-2599,Shopping,expense
+2025-07-09,Cafe - Snacks,-180,Dining,expense
+2025-07-10,Health Insurance,-1500,Insurance,expense
+2025-07-12,Freelance Payment,10000,Income,income
+2025-07-14,Concert Tickets,-2200,Entertainment,expense
+2025-07-15,Pharmacy - Vitamins,-650,Health,expense
+2025-07-18,Petrol,-1900,Transport,expense
+2025-07-20,Mobile Recharge,-399,Utilities,expense
+2025-07-22,Gift - Anniversary,-2000,Gifts,expense
+2025-07-25,EMI - Laptop,-2500,EMI,expense
+2025-07-27,Restaurant - Colleagues,-1400,Dining,expense
+2025-07-28,Local Train Pass,-600,Transport,expense
+2025-07-30,Savings Transfer,-6000,Savings,expense
+2025-08-01,Salary August,85000,Income,income
+2025-08-02,Rent - Apartment,-18000,Rent,expense
+2025-08-03,Groceries - Big Bazaar,-3600,Groceries,expense
+2025-08-04,Swiggy - Dinner,-700,Dining,expense
+2025-08-05,Uber - Night Out,-1200,Transport,expense
+2025-08-06,Electricity Bill,-2400,Utilities,expense
+2025-08-07,Internet Bill,-999,Utilities,expense
+2025-08-08,Flipkart - Watch,-3499,Shopping,expense
+2025-08-09,Cafe - Coffee,-220,Dining,expense
+2025-08-10,Health Insurance,-1500,Insurance,expense
+2025-08-12,Freelance Payment,15000,Income,income
+2025-08-14,Amusement Park,-3500,Entertainment,expense
+2025-08-15,Pharmacy - Medicines,-890,Health,expense
+2025-08-18,Petrol,-2100,Transport,expense
+2025-08-20,Mobile Recharge,-399,Utilities,expense
+2025-08-22,Gift - Raksha Bandhan,-2500,Gifts,expense
+2025-08-25,EMI - Laptop,-2500,EMI,expense
+2025-08-27,Restaurant - Friends,-2200,Dining,expense
+2025-08-28,Local Train Pass,-600,Transport,expense
+2025-08-30,Savings Transfer,-7000,Savings,expense
