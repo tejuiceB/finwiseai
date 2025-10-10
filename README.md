@@ -1,124 +1,134 @@
-# FinWise AI — Local MVP (No DB)
+# FinWise AI
 
-Local/dev-only MVP with a Python Agent (ADK) and a Next.js frontend. No persistence: all data is sent in-memory from the browser to the local agent.
+Personal finance insights with a friendly chat UI, clear charts, and proactive alerts.
 
-## Contents
+This repo contains:
 
-- `finwise_agent/` — Python agent with tools and `root_agent`
-- `finwise-frontend/` — Next.js app (created later)
+- `finwise-frontend/` — Next.js app that talks directly to Google Gemini via a local API route.
+- `finwise_agent/` — Optional Python agent (ADK quickstart) with tools and in-process memory.
 
-## Prereqs
+No database. Everything runs locally. The frontend does not depend on the Python agent.
 
-- Python 3.9+
-- Node.js 18+
-- Windows: Command Prompt or PowerShell
+## Features
 
-## 1) Python venv and ADK
+- WhatsApp-style chat on the left, insights dashboard on the right
+- Drag-and-drop CSV upload and preview table
+- Smart summaries: total income, total expense, net savings, average amount, risk/mood
+- Charts: category breakdown, monthly net trend, savings forecast
+- Proactive alerts for overspending, net drop, and category spikes
+- Light/dark mode toggle and sticky header/footer
+
+## Repository structure
+
+```
+.
+├─ finwise-frontend/        # Next.js app (Gemini direct)
+├─ finwise_agent/           # Python ADK agent (optional)
+├─ .gitignore
+└─ README.md
+```
+
+## Prerequisites
+
+- Windows with Command Prompt (cmd) or PowerShell
+- Node.js 18+ (for the frontend)
+- Python 3.9+ (only if you want to run the optional agent)
+
+---
+
+## Quick start: Frontend (recommended)
+
+1) Install dependencies
+
+```bat
+cd finwise-frontend
+npm install
+```
+
+2) Add your Gemini key
+
+Create `finwise-frontend/.env.local` with:
+
+```
+GOOGLE_API_KEY=YOUR_GEMINI_API_KEY
+GEMINI_MODEL=gemini-2.5-pro
+```
+
+3) Run the dev server
+
+```bat
+npm run dev
+```
+
+Open http://localhost:3000, drop a CSV, and start chatting. A detailed sample is included at `finwise-frontend/public/sample-transactions-detailed.csv`.
+
+Frontend architecture:
+
+- UI: `app/page.tsx` and styles in `app/page.module.css`
+- Analytics: `lib/analysis.ts` (parsing, categorization, summaries, forecasts, alerts)
+- AI: `app/api/ask/route.ts` using `@google/generative-ai` with your `GOOGLE_API_KEY`
+
+### CSV format
+
+Headers are flexible; these are recognized:
+
+- `date` (YYYY-MM-DD preferred)
+- `amount` (positive = income, negative = expense)
+- `description` (free text, used for auto-categorization)
+- `category` (optional; if missing, inferred)
+- `type` (optional; if set to `income` it’s treated as income)
+
+If `category` is missing, simple keyword rules infer categories like Transport, Dining, Rent, etc.
+
+---
+
+## Optional: Python Agent (ADK quickstart)
+
+The frontend does not require this. Run it if you want to explore the multi-tool agent and Dev UI.
+
+1) Create and activate venv
 
 ```bat
 python -m venv .venv
 .venv\Scripts\activate
+```
+
+2) Install ADK
+
+```bat
 pip install google-adk
 ```
 
-## Local Dev – Agent (ADK)
+3) Configure model auth (choose one) in `finwise_agent/.env`
 
-This follows the official ADK "Build a multi-tool agent" quickstart, adapted to the FinWise agent.
+- Google AI Studio: set `GOOGLE_API_KEY`
+- Vertex AI: set `GOOGLE_GENAI_USE_VERTEXAI=TRUE`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`, then run:
 
-### 1) Create & Activate a Virtual Environment (Windows)
-
-Open a PowerShell terminal in the repo root:
-
-```powershell
-python -m venv .venv
-.venv\Scripts\Activate.ps1
+```bat
+gcloud auth application-default login
 ```
 
-Upgrade pip and install the ADK:
+4) Launch Dev UI
 
-```powershell
-python -m pip install --upgrade pip
-pip install google-adk
-```
-
-### 2) Configure Model Auth (choose ONE)
-
-Edit `finwise_agent/.env` and set either:
-
-- Google AI Studio:
-  - Set `GOOGLE_API_KEY=your_gemini_api_key`
-- Vertex AI (GCP):
-  - Uncomment and set `GOOGLE_GENAI_USE_VERTEXAI=TRUE`
-  - Set `GOOGLE_CLOUD_PROJECT=your-project-id`
-  - Set `GOOGLE_CLOUD_LOCATION=us-central1` (or your region)
-  - Then run once in a terminal: `gcloud auth application-default login`
-
-### 3) Launch the Dev UI
-
-From the repo root:
-
-```bash
+```bat
 adk web --no-reload
 ```
 
-Open the provided URL (e.g., <http://127.0.0.1:8000>). In the top-left dropdown, select `finwise_agent`.
+Open the printed URL and select `finwise_agent`. Tools include analysis, budgeting, forecasting, CSV ingestion, local notes memory, and goal planning.
 
-### 4) Try it with sample data
+---
 
-Ask in chat:
+## Security
 
-- "Analyze the file at `finwise_agent/sample-transactions.csv`."
-- "Suggest a budget to save 10000 using `finwise_agent/sample-transactions.csv`."
-- Or paste CSV text and say "Analyze this CSV".
+- Keep your API keys in `.env.local` (ignored by Git). Never commit secrets.
+- Data stays on your machine. There is no database or cloud storage.
 
-Built-in tools:
+## Troubleshooting
 
-- `load_transactions(file_path=None, csv_text=None)`
-- `analyze_file(file_path=None, csv_text=None)`
-- `suggest_budget_from_file(file_path=None, target_savings=0.0, csv_text=None)`
-- `forecast_savings_from_file(file_path=None, months=3, csv_text=None)`
+- 404 when browsing a folder on GitHub can happen if it was committed as a submodule. The repo is already fixed; commit folders as normal.
+- If the frontend 500s on `/api/ask`, ensure `GOOGLE_API_KEY` is set and valid.
+- If ADK shows credential errors, verify `finwise_agent/.env` and your auth method, then restart with `adk web --no-reload`.
 
-### Troubleshooting
+## License
 
-- If the UI shows credential errors like "Missing key inputs argument!", ensure `.env` is filled and restart `adk web --no-reload`.
-- If the selected model isn’t available in your region/account, change `model=` in `finwise_agent/agent.py` to a supported one (e.g., `gemini-1.5-flash`).
-- Windows tip: prefer `--no-reload` to avoid asyncio transport errors.
-
-## 2) Configure provider env
-
-Edit `finwise_agent/.env` with your provider keys.
-
-- Vertex/Gemini: run `gcloud auth application-default login` beforehand (in a separate terminal) or set `GOOGLE_APPLICATION_CREDENTIALS`.
-- OpenAI: set `OPENAI_API_KEY`.
-
-## 3) Run the Agent
-
-From the repo root (the folder containing `finwise_agent/`):
-
-```bat
-adk web
-```
-
-Open the printed URL and pick `finwise_agent`. For frontend integration, you can run an API server if available:
-
-```bat
-adk api_server --port 8001 --allow-cors
-```
-
-## 4) Frontend scaffolding (to be created)
-
-From repo root:
-
-```bash
-npx create-next-app@latest finwise-frontend --use-npm --eslint
-cd finwise-frontend
-npm install axios papaparse recharts
-npm run dev
-```
-
-Then implement a page that parses CSV and POSTs to `<http://localhost:8001/agent/finwise_agent/run>`.
-
-## Additional Notes
-
-- Nothing is stored. Keep secrets in `.env` on your machine.
-- If CORS blocks browser → agent calls, add a small Next.js API proxy or start the ADK server with CORS enabled.
+Private MVP. All rights reserved.
