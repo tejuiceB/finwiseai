@@ -1,0 +1,84 @@
+# Root .gitignore for FinWise-AI
+# Covers Next.js/Node, Python agent, OS/editor, and common build/test artifacts
+
+# =====================
+# OS / General
+# =====================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =====================
+# Node / Next.js
+# =====================
+node_modules/
+.next/
+.turbo/
+.vercel/
+out/
+.cache/
+.nyc_output/
+coverage/
+.eslintcache
+*.tsbuildinfo
+
+# Env files (keep example variants)
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# =====================
+# Python
+# =====================
+__pycache__/
+*.py[cod]
+*$py.class
+.python-version
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Packaging / build
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Testing / tools caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pytype/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+pip-wheel-metadata/
+pip-log.txt
+
+# =====================
+# IDEs / Editors
+# =====================
+.vscode/
+.idea/
+.history/
+*.code-workspace
+
+# =====================
+# Temp
+# =====================
+tmp/
+temp/

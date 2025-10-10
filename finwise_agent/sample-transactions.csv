@@ -1,0 +1,9 @@
+date,description,amount,category,type
+2025-09-01,Salary,50000,Income,income
+2025-09-02,Rent,-15000,Rent,
+2025-09-03,Uber ride,-350,Transport,
+2025-09-04,Dominos,-600,Dining,
+2025-09-05,Cafe Coffee Day,-250,Dining,
+2025-09-06,Groceries,-2200,Other,
+2025-09-07,Electricity Bill,-1800,Other,
+2025-09-08,Bus Pass,-800,Transport,
