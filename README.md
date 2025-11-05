@@ -36,7 +36,7 @@ No database. Everything runs locally. The frontend does not depend on the Python
 
 ---
 
-## Quick start: Frontend (recommended)
+## Quick start: Frontend
 
 1) Install dependencies
 
@@ -82,7 +82,7 @@ If `category` is missing, simple keyword rules infer categories like Transport, 
 
 ---
 
-## Optional: Python Agent (ADK quickstart)
+##  finwise Python Agent
 
 The frontend does not require this. Run it if you want to explore the multi-tool agent and Dev UI.
 
