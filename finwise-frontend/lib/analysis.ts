@@ -13,10 +13,16 @@ export function parseAmount(v: unknown): number {
 
 export function categorize(description?: string): string {
   const d = (description || "").toLowerCase();
-  if (["uber", "ola", "taxi", "grab", "ride"].some((k) => d.includes(k))) return "Transport";
-  if (["restaurant", "dine", "cafe", "pizza", "dominos", "swiggy"].some((k) => d.includes(k))) return "Dining";
-  if (["salary", "pay", "invoice"].some((k) => d.includes(k))) return "Income";
-  if (["rent", "house", "flat"].some((k) => d.includes(k))) return "Rent";
+  if (["uber", "ola", "taxi", "grab", "ride", "lyft", "transport"].some((k) => d.includes(k))) return "Transport";
+  if (["restaurant", "dine", "cafe", "pizza", "dominos", "swiggy", "zomato", "food", "mcdonald"].some((k) => d.includes(k))) return "Dining";
+  if (["salary", "pay", "invoice", "income", "bonus", "wage"].some((k) => d.includes(k))) return "Income";
+  if (["rent", "house", "flat", "apartment", "lease"].some((k) => d.includes(k))) return "Rent";
+  if (["amazon", "flipkart", "shopping", "store", "mall", "retail"].some((k) => d.includes(k))) return "Shopping";
+  if (["electricity", "water", "gas", "utility", "bill", "internet", "phone"].some((k) => d.includes(k))) return "Utilities";
+  if (["health", "medical", "doctor", "hospital", "pharmacy", "medicine"].some((k) => d.includes(k))) return "Healthcare";
+  if (["gym", "fitness", "sport", "yoga", "netflix", "spotify", "subscription"].some((k) => d.includes(k))) return "Entertainment";
+  if (["education", "course", "tuition", "school", "college", "book"].some((k) => d.includes(k))) return "Education";
+  if (["insurance", "investment", "stock", "mutual", "fund"].some((k) => d.includes(k))) return "Investment";
   return "Other";
 }
 
@@ -104,11 +110,21 @@ export function buildSummaryContext(txns: Txn[]) {
 
 export function computeAlerts(txns: Txn[]): string[] {
   const alerts: string[] = [];
-  if (!txns || txns.length === 0) return ["No transactions loaded."];
+  if (!txns || txns.length === 0) return ["📊 No transactions loaded. Upload your CSV to get started!"];
 
   const summary = analyzeTransactions(txns);
   if (summary.expenseTotal > summary.incomeTotal) {
-    alerts.push("You spent more than you earned overall. Consider reducing top categories by 5-10%.");
+    const deficit = summary.expenseTotal - summary.incomeTotal;
+    alerts.push(`⚠️ Budget Alert: You're overspending by ${deficit.toFixed(2)}. Consider reducing discretionary spending by 10-15%.`);
+  } else if (summary.incomeTotal > 0) {
+    const savingsRate = ((summary.incomeTotal - summary.expenseTotal) / summary.incomeTotal * 100).toFixed(1);
+    if (parseFloat(savingsRate) > 20) {
+      alerts.push(`💰 Great job! You're saving ${savingsRate}% of your income. Keep up the excellent financial discipline!`);
+    } else if (parseFloat(savingsRate) > 10) {
+      alerts.push(`✅ Good progress! You're saving ${savingsRate}% of your income. Try to increase it to 20%+ for better financial health.`);
+    } else {
+      alerts.push(`📈 Your savings rate is ${savingsRate}%. Aim for at least 20% by cutting non-essential expenses.`);
+    }
   }
 
   const monthly = groupByMonth(txns);
@@ -118,11 +134,13 @@ export function computeAlerts(txns: Txn[]): string[] {
     const deltaNet = last.net - prev.net;
     const dropPct = prev.net !== 0 ? (deltaNet / Math.abs(prev.net)) * 100 : 0;
     if (prev.net > 0 && last.net < prev.net * 0.8) {
-      alerts.push(`Net savings dropped by ${Math.abs(dropPct).toFixed(0)}% vs ${prev.month}. Review discretionary spend.`);
+      alerts.push(`📉 Net savings dropped by ${Math.abs(dropPct).toFixed(0)}% compared to ${prev.month}. Review your discretionary spending patterns.`);
+    } else if (deltaNet > 0) {
+      alerts.push(`📈 Positive trend! Your savings increased by ${Math.abs(dropPct).toFixed(0)}% vs last month. Excellent work!`);
     }
   }
 
-  // Category spikes (very simple: compare sums in last vs prev month)
+  // Category spikes and trends
   const byMonthCat: Record<string, Record<string, number>> = {};
   for (const t of txns) {
     const d = t.date ? new Date(t.date) : undefined;
@@ -140,11 +158,113 @@ export function computeAlerts(txns: Txn[]): string[] {
     for (const c of cats) {
       const va = Math.abs(byMonthCat[a]?.[c] ?? 0);
       const vb = Math.abs(byMonthCat[b]?.[c] ?? 0);
-      if (vb > va * 1.3 && vb > 1000) {
-        alerts.push(`Spike in ${c}: up ${((vb - va) / (va || 1) * 100).toFixed(0)}% month-over-month.`);
+      if (vb > va * 1.3 && vb > 500) {
+        alerts.push(`🔔 ${c} spending spiked by ${((vb - va) / (va || 1) * 100).toFixed(0)}% this month. Review if this was planned.`);
+      } else if (va > 0 && vb < va * 0.7 && va > 500) {
+        alerts.push(`✨ You reduced ${c} spending by ${((va - vb) / va * 100).toFixed(0)}%. Great cost control!`);
       }
     }
   }
 
-  return alerts.length ? alerts : ["No notable alerts detected."];
+  // High expense categories
+  const categorySpending = Object.entries(summary.byCategory)
+    .filter(([, v]) => v < 0)
+    .sort((a, b) => a[1] - b[1])
+    .slice(0, 3);
+  
+  if (categorySpending.length > 0 && Math.abs(categorySpending[0][1]) > 1000) {
+    alerts.push(`💡 Top expense: ${categorySpending[0][0]} (${Math.abs(categorySpending[0][1]).toFixed(2)}). Consider budget limits for this category.`);
+  }
+
+  return alerts.length ? alerts : ["✅ All good! No alerts detected. Your finances are on track."];
+}
+
+export function suggestBudget(txns: Txn[], targetSavings: number = 0): {
+  currentSavings: number;
+  targetSavings: number;
+  neededToSave: number;
+  suggestions: Array<{ category: string; currentSpend: number; suggestedCut: number; newEstimatedSpend: number }>;
+} {
+  const summary = analyzeTransactions(txns);
+  const currentSavings = Math.max(0, summary.incomeTotal - summary.expenseTotal);
+  const needed = Math.max(0, targetSavings - currentSavings);
+
+  const categorySpending = Object.entries(summary.byCategory)
+    .filter(([, v]) => v < 0)
+    .sort((a, b) => a[1] - b[1])
+    .map(([cat, amt]) => ({ category: cat, spend: Math.abs(amt) }));
+
+  const suggestions = [];
+  let remain = needed;
+
+  for (const { category, spend } of categorySpending) {
+    if (remain <= 0) break;
+    const reduction = Math.min(spend * 0.1, remain); // 10% cut suggestion
+    suggestions.push({
+      category,
+      currentSpend: spend,
+      suggestedCut: +reduction.toFixed(2),
+      newEstimatedSpend: +(spend - reduction).toFixed(2),
+    });
+    remain -= reduction;
+  }
+
+  return {
+    currentSavings: +currentSavings.toFixed(2),
+    targetSavings: +targetSavings.toFixed(2),
+    neededToSave: +needed.toFixed(2),
+    suggestions,
+  };
+}
+
+export function generateGoalPlan(txns: Txn[], goalAmount: number, months: number): {
+  goalAmount: number;
+  months: number;
+  monthlyTarget: number;
+  weeklyTarget: number;
+  tips: Array<{ category: string; currentMonthly: number; suggestedMonthlyCut: number }>;
+} {
+  if (months <= 0 || goalAmount <= 0) {
+    return {
+      goalAmount: 0,
+      months: 0,
+      monthlyTarget: 0,
+      weeklyTarget: 0,
+      tips: [],
+    };
+  }
+
+  const summary = analyzeTransactions(txns);
+  const monthlyTarget = goalAmount / months;
+  const weeklyTarget = goalAmount / (months * 4);
+
+  const categorySpending = Object.entries(summary.byCategory)
+    .filter(([, v]) => v < 0)
+    .sort((a, b) => a[1] - b[1])
+    .slice(0, 5);
+
+  const tips = [];
+  let remain = monthlyTarget;
+
+  for (const [category, amt] of categorySpending) {
+    if (remain <= 0) break;
+    const absAmt = Math.abs(amt);
+    const cut = Math.min(absAmt * 0.1, remain);
+    if (cut > 0) {
+      tips.push({
+        category,
+        currentMonthly: +absAmt.toFixed(2),
+        suggestedMonthlyCut: +cut.toFixed(2),
+      });
+      remain -= cut;
+    }
+  }
+
+  return {
+    goalAmount: +goalAmount.toFixed(2),
+    months,
+    monthlyTarget: +monthlyTarget.toFixed(2),
+    weeklyTarget: +weeklyTarget.toFixed(2),
+    tips,
+  };
 }
