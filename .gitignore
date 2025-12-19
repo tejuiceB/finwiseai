@@ -83,3 +83,4 @@ pip-log.txt
 tmp/
 temp/
 .github/instructions/tejuice.instructions.md
+.vercel
